@@ -3,9 +3,8 @@
     <!--    <h1>layout1</h1>-->
     <slider-bar class="sidebar-container"></slider-bar>
     <div class="main-container">
-      <nav-bar></nav-bar>
-      <tags-view></tags-view>
-      <!-- <router-view></router-view> -->
+      <!-- <nav-bar></nav-bar> -->
+      <!-- <tags-view></tags-view> -->
       <AppMain></AppMain>
     </div>
   </div>

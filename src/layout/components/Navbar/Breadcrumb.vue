@@ -1,34 +1,33 @@
 <template>
-<!--  <div>122</div>-->
-  <el-breadcrumb
-    class="app-breadcrumb"
-    separator="/"
-  >
+  <!--  <div>122</div>-->
+  <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item
-        v-for="(item, index) in breadcrumbs"
-        :key="item.path"
-      >
+      <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
         <span
-          v-if="item.redirect === 'noredirect' || index === breadcrumbs.length-1"
+          v-if="
+            item.redirect === 'noredirect' || index === breadcrumbs.length - 1
+          "
           class="no-redirect"
-        >{{ item.meta.title }}</span>
-        <a
-          v-else
-          @click.prevent="handleLink(item)"
-        >{{ item.meta.title }}</a>
+          >{{ item.meta.title }}</span
+        >
+        <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, reactive } from 'vue'
-import { RouteRecordRaw, useRouter, useRoute, RouteLocationMatched } from 'vue-router'
-const router = useRouter()
-const route = useRoute()
+import { watch, ref, reactive } from "vue";
+import {
+  RouteRecordRaw,
+  useRouter,
+  useRoute,
+  RouteLocationMatched,
+} from "vue-router";
+const router = useRouter();
+const route = useRoute();
 // const breadcrumbs: Array<RouteRecordRaw> = ref([])
-const breadcrumbs = reactive([])
+const breadcrumbs = reactive([]);
 watch(
   () => router.currentRoute.value.path,
   (n, o) => {
@@ -38,35 +37,38 @@ watch(
     //   currentTab.value = i.toString();
     //   sessionStorage.setItem("tabindex", i.toString());
     // }
-    getBreadcrumb()
+    getBreadcrumb();
   }
-)
+);
 
 const getBreadcrumb = () => {
-  breadcrumbs.length = 0
+  breadcrumbs.length = 0;
   let mached = route.matched.filter((item) => {
     // console.log(item.meta)
-    return item?.meta?.title
-  })
+    return item?.meta?.title;
+  });
   // item.meta.title);
   // console.log(route.matched, mached)
   // console.log(mached, 'mached')
   // 第一个路径如果不是首页，需要在匹配路径前面拼接一个首页
-  const first = mached[0]
-  const homePath:RouteLocationMatched[] = [{ path: '/', meta: { title: '首页' } }]
-  if (first.path !== '/dashboard') {
-    mached = homePath.concat(mached)
+  const first = mached[0];
+  const homePath: RouteLocationMatched[] = [
+    { path: "/", meta: { title: "首页" } },
+  ];
+  console.log(first, "first");
+  if (first.path !== "/dashboard") {
+    mached = homePath.concat(mached);
   }
   // console.log(mached, 'mached')
-  const ss = mached.filter((item:any) => {
-    return item.meta && item.meta.title && item.meta.breadcrumb !== false
-  })
-  Object.assign(breadcrumbs, ss)
+  const ss = mached.filter((item: any) => {
+    return item.meta && item.meta.title && item.meta.breadcrumb !== false;
+  });
+  Object.assign(breadcrumbs, ss);
   // breadcrumbs = ss
   // console.log(ss, 'ss')
-}
+};
 
-getBreadcrumb()
+getBreadcrumb();
 
 //
 // private getBreadcrumb () {
@@ -107,7 +109,6 @@ getBreadcrumb()
 //     console.warn(err)
 //   })
 // }
-
 </script>
 
 <style lang="scss" scoped>

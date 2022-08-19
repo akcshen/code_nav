@@ -13,12 +13,11 @@
         :class="{ 'submenu-title-noDropdown': isFirstLevel }"
       >
         <svg-icon
-          v-if="theOnlyOneChild.meta.icon"
+          v-if="theOnlyOneChild?.meta?.icon"
           :name="theOnlyOneChild.meta.icon"
         />
-        <span v-if="theOnlyOneChild.meta.title">{{
-          // theOnlyOneChild.meta.title
-          resolvePath(theOnlyOneChild.path)
+        <span v-if="theOnlyOneChild?.meta?.title">{{
+          theOnlyOneChild.meta.title
         }}</span>
       </el-menu-item>
     </template>
@@ -26,8 +25,7 @@
       <template v-slot:title>
         <svg-icon v-if="item.meta && item.meta.icon" :name="item.meta.icon" />
         <span v-if="item.meta && item.meta.title">
-          <!--          {{  item.meta.title }}-->
-          {{ resolvePath(item.path) }}
+          {{ item.meta.title }}
         </span>
       </template>
       <template v-if="item.children">
@@ -45,24 +43,26 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, defineProps, ref, toRefs } from "vue";
-import { isExternal } from "@/assets/utils/validate";
 import path from "path";
+import { computed, defineProps, ref, toRefs } from "vue";
+import { RouteRecordRaw } from "vue-router";
 import { useStore } from "vuex";
 const isCollapse = ref(false);
 const isFirstLevel = ref(false);
-
-const props = defineProps({
-  item: Object,
-  basePath: String,
-});
+interface Dog {
+  item: RouteRecordRaw;
+  basePath: string;
+}
+const props = defineProps<Dog>();
+// const props2: Dog = props;
 const store = useStore();
 const clickMenu = (val: any) => {
-  console.log(store);
   store.commit("pushtags", val);
 };
 
 const { item, basePath } = toRefs(props);
+console.log(basePath.value, "basePath");
+// const item: RouteRecordRaw = props.item;
 // let basePath = ''
 // console.log(basePath?.value, 'path:____')
 // if (item?.value?.children) {
@@ -82,7 +82,8 @@ const resolvePath = (routePath: string) => {
   // if (isExternal(basePath)) {
   //   return basePath
   // }
-  return path.resolve(basePath?.value, routePath);
+  // console.log(basePath.value, "basePath.value----", routePath, "routePath");
+  return path.resolve(basePath.value, routePath);
 };
 const showingChildNumber = () => {
   if (item?.value?.children) {
@@ -93,11 +94,10 @@ const showingChildNumber = () => {
   }
   return 0;
 };
-const theOnlyOneChild = computed(() => {
+const theOnlyOneChild = computed((): RouteRecordRaw | null => {
   if (showingChildNumber() > 1) {
     return null;
   }
-
   if (item?.value?.children) {
     for (const child of item?.value?.children) {
       if (!child.meta || !child.meta.hidden) {

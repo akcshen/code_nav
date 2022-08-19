@@ -5,11 +5,13 @@ import Layout from '@/layout/index.vue'
 // console.log(nestedRouter)
 const asyncFiles = require.context('./modules', true, /\.ts$/)
 let permissionModules: Array<RouteRecordRaw> = []
+console.log(asyncFiles, 'asyncFiles')
 asyncFiles.keys().forEach((key) => {
+  console.log(key)
   if (key === './index.ts') return
   permissionModules = permissionModules.concat(asyncFiles(key).default)
 })
-console.log(permissionModules)
+console.log(permissionModules, 'permissionModules')
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -69,6 +71,12 @@ const routes: Array<RouteRecordRaw> = [
       component: () => import(/* webpackChunkName: "mixin" */ '@/views/components-demo/mixin.vue'),
       name: 'mixin',
       meta: { title: 'mixin' }
+    },
+    {
+      path: 'htocode',
+      component: () => import(/* webpackChunkName: "htocode" */ '@/views/components-demo/h5To2wcode.vue'),
+      name: 'htocode',
+      meta: { title: 'h5tocode' }
     }]
   },
   {
